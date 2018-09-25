@@ -24,6 +24,10 @@
         </activity>
         <activity android:name=".Controller.LoginActivity" />
         <activity android:name=".Controller.CreateUserActivity"></activity>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
     </application>
 
 </manifest>
