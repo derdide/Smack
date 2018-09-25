@@ -1,15 +1,17 @@
 package net.derdide.smack.Services
 
 import android.content.Context
+import android.content.Intent
+import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.JsonRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import net.derdide.smack.Utilities.URL_CREATE_USER
-import net.derdide.smack.Utilities.URL_LOGIN
-import net.derdide.smack.Utilities.URL_REGISTER
+import net.derdide.smack.Services.UserDataService.avatarColor
+import net.derdide.smack.Services.UserDataService.email
+import net.derdide.smack.Utilities.*
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -29,7 +31,6 @@ object AuthService {
         val registerRequest = object : StringRequest(Method.POST, URL_REGISTER, Response.Listener {
             response ->
 
-            println("User $email registered")
             Log.d("APP", "User $email registered")
             complete(true)
         }, Response.ErrorListener {
@@ -63,7 +64,6 @@ object AuthService {
                     user = response.getString("user")
                     authToken = response.getString("token")
                     isLoggedIn = true
-                    println("User $email logged in")
                     Log.d("APP", "User $email logged in")
                     complete(true)
                 } catch (e: JSONException) {
@@ -106,7 +106,6 @@ object AuthService {
                 UserDataService.avatarName= response.getString("avatarName")
                 UserDataService.avatarColor= response.getString("avatarColor")
                 UserDataService.id= response.getString("_id")
-                println("User $email created")
                 Log.d("APP", "User $email created")
                 Log.d("APP", "Avatar Color $avatarColor")
                 complete(true)
@@ -135,6 +134,39 @@ object AuthService {
         }
 
         Volley.newRequestQueue(context).add(createRequest)
+
+    }
+
+    fun findUserByEmail(context: Context, complete: (Boolean) -> Unit){
+
+        val findUserRequest = object: JsonObjectRequest(Method.GET, "$URL_GET_USER$user", null, Response.Listener {
+            response ->
+            try {
+                UserDataService.name= response.getString("name")
+                UserDataService.email= response.getString("email")
+                UserDataService.avatarName= response.getString("avatarName")
+                UserDataService.avatarColor= response.getString("avatarColor")
+                UserDataService.id= response.getString("_id")
+                val userDataChange = Intent(BROADCAST_USER_DATA_CHANGE)
+                LocalBroadcastManager.getInstance(context).sendBroadcast(userDataChange)
+                Log.d("APP", "User $email: data retrieved")
+                complete(true)
+            } catch (e: JSONException) {
+                Log.d("JSON", "EXC: " +e.localizedMessage)
+                complete(false)
+            }
+        }, Response.ErrorListener {error -> Log.d("ERR", "Could not find user: $user")
+            complete(false)
+
+        }){
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers.put("Authorization", "Bearer $authToken")
+                return headers
+            }
+        }
+
+        Volley.newRequestQueue(context).add(findUserRequest)
 
     }
 }
