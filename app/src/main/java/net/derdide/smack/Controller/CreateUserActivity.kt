@@ -53,11 +53,11 @@ class CreateUserActivity : AppCompatActivity() {
         Log.d("APP", "user e-mail $userEmail")
         Log.d("APP", "user name $userName")
 
-        AuthService.registerUser(this, userEmail, userPwd){
+        AuthService.registerUser(userEmail, userPwd){
             registerSuccess -> if (registerSuccess){
-                AuthService.loginUser(this, userEmail, userPwd){
+                AuthService.loginUser( userEmail, userPwd){
                     loginSuccess -> if (loginSuccess){
-                        AuthService.createUser(this, userName, userEmail, userAvatar, avatarColor){
+                        AuthService.createUser(userName, userEmail, userAvatar, avatarColor){
                         createSuccess -> if (createSuccess){
 
                             val userDataChange = Intent(BROADCAST_USER_DATA_CHANGE)

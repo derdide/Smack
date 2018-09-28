@@ -7,14 +7,16 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import net.derdide.smack.Controller.App
 import net.derdide.smack.Model.Channel
+import net.derdide.smack.Model.Message
 import net.derdide.smack.Utilities.URL_GET_CHANNELS
 import org.json.JSONException
 
 object MessageService {
 
     val channels = ArrayList<Channel>()
+    val messages = ArrayList<Message>()
 
-    fun getChannels(context: Context, complete: (Boolean) -> Unit) {
+    fun getChannels(complete: (Boolean) -> Unit) {
         val channelsRequest = object : JsonArrayRequest(Method.GET, URL_GET_CHANNELS, null,
                 Response.Listener {response ->
                     try {
@@ -52,5 +54,7 @@ object MessageService {
             }
         }
         App.prefs.requestQueue.add(channelsRequest)
+
+
     }
 }
