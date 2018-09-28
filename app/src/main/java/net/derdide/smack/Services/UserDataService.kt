@@ -1,6 +1,7 @@
 package net.derdide.smack.Services
 
 import android.graphics.Color
+import net.derdide.smack.Controller.App
 import java.util.*
 
 object UserDataService {
@@ -35,8 +36,8 @@ object UserDataService {
         avatarName = ""
         email = ""
         name = ""
-        AuthService.authToken = ""
-        AuthService.user = ""
-        AuthService.isLoggedIn = false
+        App.prefs.user = ""
+        App.prefs.authToken= ""
+        App.prefs.isLoggedIn = false
     }
 }
