@@ -1,6 +1,7 @@
 package net.derdide.smack.Services
 
 import android.graphics.Color
+import android.util.Log
 import net.derdide.smack.Controller.App
 import java.util.*
 
@@ -22,8 +23,13 @@ object UserDataService {
         val scanner = Scanner(strippedColor)
         if (scanner.hasNext()){
             r = (scanner.nextDouble() *255).toInt()
+            Log.d("APP", "Red channel $r")
             g = (scanner.nextDouble() *255).toInt()
+            Log.d("APP", "Green channel $g")
             b = (scanner.nextDouble() *255).toInt()
+            Log.d("APP", "Blue channel $b")
+
+
         }
 
         return Color.rgb(r, g, b)
@@ -39,5 +45,7 @@ object UserDataService {
         App.prefs.user = ""
         App.prefs.authToken= ""
         App.prefs.isLoggedIn = false
+        MessageService.clearMessages()
+        MessageService.clearChannels()
     }
 }
